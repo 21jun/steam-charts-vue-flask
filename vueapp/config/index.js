@@ -31,6 +31,13 @@ module.exports = {
                 pathRewrite: {
                     '^/db/applist': ''
                 }
+            },
+            '/db/playerCount': {
+                target: 'http://localhost:5000/db/playerCount',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/db/playerCount': ''
+                }
             }
         },
 

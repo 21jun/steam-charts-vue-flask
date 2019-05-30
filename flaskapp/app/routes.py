@@ -1,15 +1,16 @@
 from flask import Flask, session, redirect, url_for, escape, request
 import pymysql
 import json
+import datetime
 
 app = Flask(__name__)
 
 db = pymysql.connect(
     host="localhost",
-    port=3306,
+    port=3307,
     db="flask",
-    user="flask03",  # flask01
-    password="flask03"  # flask01
+    user="root",  # flask01
+    password="1qazxc"  # flask01
 )
 
 cursor = db.cursor()
@@ -240,10 +241,54 @@ def getApplist():
     cursor.execute(SQL)
     response["applist"] = cursor.fetchall()
     response["success"] = True
-
     return json.dumps(response)
 
 
+def myconverter(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+
+def json_default(value): 
+    if isinstance(value, datetime.date): 
+        return value.strftime('%Y-%m-%d') 
+    raise TypeError('not JSON serializable')
+
+@app.route("/db/playerCount")
+def getPlayerCount():
+    response = {
+        'success': False,
+        'player_count': [],
+        'error': ''
+    }
+    SQL = '''
+    SELECT 
+        appid,
+        name,
+        MAX(player_count) AS max_player,
+        DATE(date) AS date1
+    FROM
+        `app_current_players2`
+    WHERE date > '2019-03-22' and date <= '2019-03-23'
+    GROUP BY appid , date1
+    LIMIT 100
+
+    '''
+    SQL2 = '''
+    SELECT 
+        appid, name, player_count, date
+    FROM
+        `app_current_players2`
+    LIMIT 10
+    '''
+
+    # cursor.execute(SQL2)
+    # data = cursor.fetchall()
+    # print(data)
+    cursor.execute(SQL)
+    response["player_count"] = cursor.fetchall()
+    response["success"] = True
+    # print(response)
+    return json.dumps(response, default = json_default)
 
 @app.route("/board/get/<board_id>")
 def getBoardDetail(board_id):

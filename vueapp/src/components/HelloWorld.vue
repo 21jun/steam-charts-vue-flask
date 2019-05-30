@@ -14,6 +14,7 @@
     </div>
     <button @click="getBoardList">BOARD</button>
     <button @click="get_applist">applist</button>
+    <button @click="get_playerCount">playerCount</button>
 
 
     <GChart
@@ -35,6 +36,7 @@
 <script>
 import axios from 'axios'
 import get_app_list from '../modules/GetApplist'
+import get_player_count from '../modules/GetPlayerCount'
 
 export default {
   name: 'HelloWorld',
@@ -42,6 +44,9 @@ export default {
     return {
       msg: "0",
       my_boards:[],
+      players : [
+
+      ],
       chartData: [
         ['Name', 'appid'],
         ['2014', 1000],
@@ -90,6 +95,21 @@ export default {
         console.log(this.chartData)
 
         this.chartData = get_app_list(response.data['applist'])
+
+      })
+    },
+
+    get_playerCount(){
+      axios({
+        method: "get",
+        url: "/db/playerCount"
+      }).then((response)=>{
+        //console.log(response)
+        //this.chartData = get_app_list(response.data['applist'])
+        console.log(get_player_count(response.data['player_count']))
+        //console.log(this.chartData)
+
+        this.players = get_player_count(response.data['player_count'])
 
       })
     }

@@ -1,16 +1,23 @@
 from flask import Flask, session, redirect, url_for, escape, request
+from flask_cors import CORS
 import pymysql
 import json
 import datetime
 
 app = Flask(__name__)
+# CORS 설정
+# /db/ , /api/ 로 시작하는 모든 요청에 대해서 허용
+cors = CORS(app, resources={
+  r"/db/*": {"origin": "*"},
+  r"/api/*": {"origin": "*"},
+})
 
 db = pymysql.connect(
     host="localhost",
-    port=3307,
-    db="flask",
-    user="root",  # flask01
-    password="1qazxc"  # flask01
+    port=3306,
+    db="flasksteam",
+    user="root", 
+    password="1qazxc"
 )
 
 cursor = db.cursor()
@@ -243,51 +250,49 @@ def getApplist():
     response["success"] = True
     return json.dumps(response)
 
-
-def myconverter(o):
-    if isinstance(o, datetime.datetime):
-        return o.__str__()
-
 def json_default(value): 
     if isinstance(value, datetime.date): 
         return value.strftime('%Y-%m-%d') 
     raise TypeError('not JSON serializable')
 
-@app.route("/db/playerCount")
-def getPlayerCount():
+@app.route("/db/playerCount/<date>")
+def getPlayerCount(date):
+
+    print(date)
+
     response = {
         'success': False,
         'player_count': [],
+        'date' : '',
         'error': ''
     }
+
+    # 3월 22일 최고 동접자수 top 20
     SQL = '''
     SELECT 
-        appid,
-        name,
-        MAX(player_count) AS max_player,
-        DATE(date) AS date1
+        *
     FROM
-        `app_current_players2`
-    WHERE date > '2019-03-22' and date <= '2019-03-23'
-    GROUP BY appid , date1
-    LIMIT 100
-
+        (SELECT 
+            B.appid, B.name, A.max_player, A.date
+        FROM
+            (SELECT 
+            appid, MAX(count) AS max_player, DATE(date) AS date
+        FROM
+            `player_count`
+        WHERE
+            date(date) = {date}
+        GROUP BY appid , date) A
+        LEFT JOIN applist B ON B.appid = A.appid) B
+    ORDER BY max_player DESC
+    LIMIT 20
     '''
-    SQL2 = '''
-    SELECT 
-        appid, name, player_count, date
-    FROM
-        `app_current_players2`
-    LIMIT 10
-    '''
-
-    # cursor.execute(SQL2)
-    # data = cursor.fetchall()
-    # print(data)
-    cursor.execute(SQL)
+    cursor.execute(SQL.format(date=date))
     response["player_count"] = cursor.fetchall()
     response["success"] = True
-    # print(response)
+    # print(type(response["player_count"][0][3]))
+    # a = json.dumps(response, default = json_default)
+    # print("a =", a.d)
+    # print(response["player_count"])
     return json.dumps(response, default = json_default)
 
 @app.route("/board/get/<board_id>")

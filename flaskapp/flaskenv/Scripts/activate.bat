@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set "VIRTUAL_ENV=C:\Users\21jun\OneDrive\Desktop\vue-flask-master\flaskapp\flaskenv"
+set "VIRTUAL_ENV=C:\Users\21jun\develop\steam_vue_flask\flaskapp\flaskenv"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"

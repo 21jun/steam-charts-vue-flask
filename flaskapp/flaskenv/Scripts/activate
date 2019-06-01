@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\21jun\OneDrive\Desktop\vue-flask-master\flaskapp\flaskenv"
+VIRTUAL_ENV="C:\Users\21jun\develop\steam_vue_flask\flaskapp\flaskenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

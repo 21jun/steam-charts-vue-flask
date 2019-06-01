@@ -14,11 +14,11 @@
     </div>
     <button @click="getBoardList">BOARD</button>
     <button @click="get_applist">applist</button>
-    <button @click="get_playerCount">playerCount</button>
 
 
     <GChart
         type="ColumnChart"
+        :settings="{packages: ['bar']}"  
         :data="chartData"
         :options="chartOptions"
     />
@@ -36,7 +36,6 @@
 <script>
 import axios from 'axios'
 import get_app_list from '../modules/GetApplist'
-import get_player_count from '../modules/GetPlayerCount'
 
 export default {
   name: 'HelloWorld',
@@ -44,9 +43,8 @@ export default {
     return {
       msg: "0",
       my_boards:[],
-      players : [
-
-      ],
+      players : [],
+      
       chartData: [
         ['Name', 'appid'],
         ['2014', 1000],
@@ -56,8 +54,8 @@ export default {
       ],
       chartOptions: {
         chart: {
-          title: 'Company Performance',
-          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+          title: "Today's top 10 games",
+          subtitle: '',
         }
       }
     }
@@ -98,21 +96,6 @@ export default {
 
       })
     },
-
-    get_playerCount(){
-      axios({
-        method: "get",
-        url: "/db/playerCount"
-      }).then((response)=>{
-        //console.log(response)
-        //this.chartData = get_app_list(response.data['applist'])
-        console.log(get_player_count(response.data['player_count']))
-        //console.log(this.chartData)
-
-        this.players = get_player_count(response.data['player_count'])
-
-      })
-    }
   }
 }
 </script>

@@ -27,7 +27,7 @@ function global:deactivate ([switch]$NonDestructive) {
 
 deactivate -nondestructive
 
-$env:VIRTUAL_ENV="C:\Users\21jun\OneDrive\Desktop\vue-flask-master\flaskapp\flaskenv"
+$env:VIRTUAL_ENV="C:\Users\21jun\develop\steam_vue_flask\flaskapp\flaskenv"
 
 if (! $env:VIRTUAL_ENV_DISABLE_PROMPT) {
     # Set the prompt to include the env name

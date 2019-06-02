@@ -1,5 +1,6 @@
 <template>
   <div id='app'>
+    <!-- 20190321 변수화 시키기 -->
   <button @click="get_playerCount('20190321')">playerCount</button>
   <GChart
     :settings="{packages: ['bar']}"    

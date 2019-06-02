@@ -295,6 +295,32 @@ def getPlayerCount(date):
     # print(response["player_count"])
     return json.dumps(response, default = json_default)
 
+# appid 넣으면 tag 정보들 반환
+@app.route("/db/tags/<appid>")
+def getTags(appid):
+
+    response = {
+        'success': False,
+        'tags': [],
+        'error': ''
+    }
+
+    SQL = '''
+    select T2.tag_name
+    from (select A.appid, A.name, B.tagid
+        from `applist` A
+                join `tags` B ON A.appid = B.appid
+        where A.appid = {appid}) T1
+        left join `taglist` T2 ON T1.tagid = T2.tagid;
+    '''
+    cursor.execute(SQL.format(appid=appid))
+    response["tags"] = cursor.fetchall()
+    response["success"] = True
+    print(response)
+    return json.dumps(response, default = json_default)
+
+
+
 @app.route("/board/get/<board_id>")
 def getBoardDetail(board_id):
     response = {

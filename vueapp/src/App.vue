@@ -1,22 +1,51 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <v-app dark>
+    <v-navigation-drawer
+      v-model="drawer"
+      clipped
+      fixed
+      app
+    >
+      <v-list dense>
+        <router-link to="/TopGameChart">
+          <v-list-tile @click="">
+            <v-list-tile-action>
+              <v-icon>dashboard</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>TopGameChart</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </router-link>
+        <router-link to="/DetailPage">
+        <v-list-tile @click="">
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>DetailPage</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        </router-link>
+      </v-list>
+    </v-navigation-drawer>
+  <v-toolbar app></v-toolbar>
+  <v-content>
+    <v-container fluid>
+      <router-view></router-view>
+    </v-container>
+  </v-content>
+  <v-footer app></v-footer>
+</v-app>
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+  export default {
+    data: () => ({
+      drawer: null
+    }),
+    props: {
+      source: String
+    }
+  }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

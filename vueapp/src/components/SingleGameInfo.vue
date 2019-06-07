@@ -67,8 +67,8 @@ export default {
   },
   created() {
       this.t_appid = this.$route.params.t_appid;
-      //this.get_maxPlayer(this.t_appid)
-      //this.get_tagsInfo(this.t_appid)
+      this.get_maxPlayer(this.t_appid)
+      this.get_tagsInfo(this.t_appid)
   },
 
   methods: {

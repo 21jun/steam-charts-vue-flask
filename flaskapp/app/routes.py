@@ -15,7 +15,7 @@ cors = CORS(app, resources={
 def db_conn():
     db = pymysql.connect(
         host="localhost",
-        port=3306,
+        port=3307,
         db="flasksteam",
         user="root", 
         password="1qazxc"
@@ -24,7 +24,7 @@ def db_conn():
 
 db = pymysql.connect(
     host="localhost",
-    port=3306,
+    port=3307,
     db="flasksteam",
     user="root", 
     password="1qazxc"
@@ -134,7 +134,7 @@ def getTags(appid):
     response["tags"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
-    print(response)
+    #print(response)
     return json.dumps(response, default = json_default)
 
 # appid 넣으면 해당 게임 일별 동접자수 최대치 반환
@@ -161,7 +161,7 @@ def getDailyMaxPlayer(appid):
     response["player_count"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
-    print("re", response)
+    #print("re", response)
     return json.dumps(response, default = json_default)
 
 
@@ -192,7 +192,7 @@ def searchApp(text):
     response["list"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
-    print(response)
+    #print(response)
     return json.dumps(response, default = json_default)
 
 # tag 넣으면 해당 태그게임들 반환
@@ -223,7 +223,7 @@ def searchTagGame(text):
     response["list"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
-    print(response)
+    #print(response)
     return json.dumps(response, default = json_default)
 
 # appid 넣으면 게임 이름 반환하는 쿼리
@@ -243,7 +243,7 @@ def getGameName(appid):
     response["name"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
-    print(response)
+    #print(response)
     return json.dumps(response, default = json_default)
 
 '''

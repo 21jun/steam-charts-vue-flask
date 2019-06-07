@@ -27,13 +27,23 @@
           </v-list-tile-content>
         </v-list-tile>
         </router-link>
-        <router-link to="/SingleGameinfo">
+        <router-link to="/SingleGameinfo/570">
         <v-list-tile @click="">
           <v-list-tile-action>
             <v-icon>settings</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>SingleGameinfo</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        </router-link>
+        <router-link to="/TagLists">
+        <v-list-tile @click="">
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>TagLists</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         </router-link>

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "chartjs-web-components": "^2.7.1",
     "material-design-icons-iconfont": "^5.0.1",
     "v-calendar": "^1.0.0-beta.14",
     "vue": "^2.5.2",

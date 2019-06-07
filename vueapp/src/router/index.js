@@ -4,8 +4,9 @@ import HelloWorld from '@/components/HelloWorld'
 import TopGameChart from '@/components/TopGameChart'
 import DetailPage from '@/components/DetailPage'
 import SingleGameInfo from '@/components/SingleGameInfo'
-
+import TagLists from '@/components/TagLists'
 Vue.use(Router)
+
 
 export default new Router({
   routes: [
@@ -25,9 +26,14 @@ export default new Router({
       component: DetailPage 
     },
     {
-      path: '/SingleGameInfo',
+      path: '/SingleGameInfo/:t_appid',
       name: 'SingleGameInfo',
-      component: SingleGameInfo 
+      component: SingleGameInfo,
+    },
+    {
+      path: '/TagLists',
+      name: 'TagLists',
+      component: TagLists 
     },
   ]
 })

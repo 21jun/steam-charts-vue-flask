@@ -12,6 +12,16 @@ cors = CORS(app, resources={
   r"/api/*": {"origin": "*"},
 })
 
+def db_conn():
+    db = pymysql.connect(
+        host="localhost",
+        port=3306,
+        db="flasksteam",
+        user="root", 
+        password="1qazxc"
+    )
+    return db
+
 db = pymysql.connect(
     host="localhost",
     port=3306,
@@ -40,6 +50,8 @@ def test():
 
 @app.route("/db/applist")
 def getApplist():
+    db = db_conn()
+    cursor = db.cursor()
     response = {
         'success': False,
         'applist': [],
@@ -50,6 +62,7 @@ def getApplist():
     cursor.execute(SQL)
     response["applist"] = cursor.fetchall()
     response["success"] = True
+    cursor.close()
     return json.dumps(response)
 
 def json_default(value): 
@@ -59,7 +72,8 @@ def json_default(value):
 
 @app.route("/db/playerCount/<date>")
 def getPlayerCount(date):
-
+    db = db_conn()
+    cursor = db.cursor()
     print(date)
 
     response = {
@@ -90,6 +104,7 @@ def getPlayerCount(date):
     cursor.execute(SQL.format(date=date))
     response["player_count"] = cursor.fetchall()
     response["success"] = True
+    cursor.close()
     # print(type(response["player_count"][0][3]))
     # a = json.dumps(response, default = json_default)
     # print("a =", a.d)
@@ -99,7 +114,8 @@ def getPlayerCount(date):
 # appid 넣으면 tag 정보들 반환
 @app.route("/db/tags/<appid>")
 def getTags(appid):
-
+    db = db_conn()
+    cursor = db.cursor()
     response = {
         'success': False,
         'tags': [],
@@ -117,13 +133,15 @@ def getTags(appid):
     cursor.execute(SQL.format(appid=appid))
     response["tags"] = cursor.fetchall()
     response["success"] = True
+    cursor.close()
     print(response)
     return json.dumps(response, default = json_default)
 
 # appid 넣으면 해당 게임 일별 동접자수 최대치 반환
 @app.route("/db/maxPlayer/<appid>")
 def getDailyMaxPlayer(appid):
-
+    db = db_conn()
+    cursor = db.cursor()
     response = {
         'success': False,
         'player_count': [],
@@ -142,6 +160,7 @@ def getDailyMaxPlayer(appid):
     cursor.execute(SQL.format(appid=appid))
     response["player_count"] = cursor.fetchall()
     response["success"] = True
+    cursor.close()
     print("re", response)
     return json.dumps(response, default = json_default)
 
@@ -149,7 +168,8 @@ def getDailyMaxPlayer(appid):
 # text 넣으면 applist 정보들 반환
 @app.route("/db/applist/<text>")
 def searchApp(text):
-
+    db = db_conn()
+    cursor = db.cursor()
     response = {
         'success': False,
         'list': [],
@@ -171,13 +191,15 @@ def searchApp(text):
     cursor.execute(SQL.format(text=text))
     response["list"] = cursor.fetchall()
     response["success"] = True
+    cursor.close()
     print(response)
     return json.dumps(response, default = json_default)
 
 # tag 넣으면 해당 태그게임들 반환
 @app.route("/db/searchTag/<text>")
 def searchTagGame(text):
-
+    db = db_conn()
+    cursor = db.cursor()
     response = {
         'success': False,
         'list': [],
@@ -185,7 +207,7 @@ def searchTagGame(text):
     }
     SQL ='''
     SELECT 
-        T1.name
+        T1.appid, T1.name
     FROM
         `applist` T1
             JOIN
@@ -200,11 +222,46 @@ def searchTagGame(text):
     cursor.execute(SQL.format(text=text))
     response["list"] = cursor.fetchall()
     response["success"] = True
+    cursor.close()
     print(response)
     return json.dumps(response, default = json_default)
 
+# appid 넣으면 게임 이름 반환하는 쿼리
+@app.route("/db/name/<appid>")
+def getGameName(appid):
+    db = db_conn()
+    cursor = db.cursor()
+    response = {
+        'success': False,
+        'name': '',
+        'error': ''
+    }
+    SQL ='''
+    select name from applist where appid = {appid}
+    '''
+    cursor.execute(SQL.format(appid=appid))
+    response["name"] = cursor.fetchall()
+    response["success"] = True
+    cursor.close()
+    print(response)
+    return json.dumps(response, default = json_default)
 
-
+'''
+set @prev = (select count from flasksteam.player_count where appid = 39120 limit 1);
+SELECT
+    appid, date, count,
+    @prev as '전일 이용자',
+    (count - @prev) / @prev * 100 as '증감량',
+    @prev := count
+FROM
+    (SELECT
+        appid, count, DATE(date) AS date
+    FROM
+        flasksteam.player_count
+    WHERE
+        appid = 39120
+    GROUP BY appid , DATE(date)) A
+'''
 
 if __name__ == "__main__":
     # app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

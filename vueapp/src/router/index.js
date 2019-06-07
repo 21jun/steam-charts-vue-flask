@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import TopGameChart from '@/components/TopGameChart'
 import DetailPage from '@/components/DetailPage'
+import SingleGameInfo from '@/components/SingleGameInfo'
+
 Vue.use(Router)
 
 export default new Router({
@@ -21,6 +23,11 @@ export default new Router({
       path: '/DetailPage',
       name: 'DetailPage',
       component: DetailPage 
+    },
+    {
+      path: '/SingleGameInfo',
+      name: 'SingleGameInfo',
+      component: SingleGameInfo 
     },
   ]
 })

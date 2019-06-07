@@ -1,32 +1,58 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm6 offset-sm3>
-      <v-card>
-        <v-img
-          class="white--text"
-          height="200px"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        >
-          <v-container fill-height fluid>
-            <v-layout fill-height>
-              <v-flex xs12 align-end flexbox>
-                <span class="headline">Top 10 Australian beaches</span>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-img>
-        <v-card-title>
-          <div>
-            <span class="grey--text">Number 10</span><br>
-            <span>Whitehaven Beach</span><br>
-            <span>Whitsunday Island, Whitsunday Islands</span>
-          </div>
-        </v-card-title>
-        <v-card-actions>
-          <v-btn flat color="orange">Share</v-btn>
-          <v-btn flat color="orange">Explore</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <div>
+    <input-form></input-form>
+    <h1>{{name}}</h1>
+    <v-btn small color="primary" @click="get_applist()">검색</v-btn>
+    <table id="firstTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>AppID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="app in list" v-bind:key ='app'>
+          <td>{{app[0]}}</td>
+          <td>{{app[1]}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
+
+<script>
+import axios from 'axios'
+import InputForm from './InputForm'
+import get_app_list from '../modules/GetApplist'
+import ApplistTable from './ApplistTable'
+export default {
+  name: 'App',
+  components: {
+    InputForm
+  },
+  data () {
+    return {
+      name : '초기값',
+      list : [],
+    }
+  },
+  created() {
+    this.$EventBus.$on('game-name-pass', this.setGameName)
+  },
+
+  methods: {
+    setGameName : function(text)
+    {
+      this.name = text
+    },
+    get_applist(){
+        const baseURI = 'http://localhost:5000/db/applist/';
+
+        axios.get(baseURI+this.name).then((response)=>{
+            console.log(get_app_list(response.data['list']))
+            this.list = get_app_list(response.data['list'])
+        })
+    }
+  }
+}
+</script>

@@ -6,6 +6,7 @@ import router from './router'
 import Bars from 'vuebars'
 import VueGoogleCharts from 'vue-google-charts'
 import Vuetify from 'vuetify'
+import Trend from 'vuetrend'
 import '../node_modules/vuetify/dist/vuetify.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
@@ -14,6 +15,8 @@ Vue.use(Bars)
 Vue.use(VueGoogleCharts)
 Vue.use(Vuetify)
 Vue.use(router)
+Vue.use(Trend)
+Vue.prototype.$EventBus = new Vue();
 
 /* eslint-disable no-new */
 new Vue({

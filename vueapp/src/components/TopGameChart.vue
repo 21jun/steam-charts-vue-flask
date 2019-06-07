@@ -1,14 +1,14 @@
 <template>
   <div id='app'>
-    <!-- 20190321 변수화 시키기 -->
-  <button @click="get_playerCount('20190321')">playerCount</button>
-  <GChart
-    :settings="{packages: ['bar']}"    
-    :data="players"
-    :options="chartOptions"
-    :createChart="(el, google) => new google.charts.Bar(el)"
-    @ready="onChartReady"
-  />
+    <v-date-picker v-model="picker" :landscape=true ></v-date-picker>
+    <v-btn color="info" @click="get_playerCount(t_date)">playerCount</v-btn>
+    <GChart
+      :settings="{packages: ['bar']}"    
+      :data="players"
+      :options="chartOptions"
+      :createChart="(el, google) => new google.charts.Bar(el)"
+      @ready="onChartReady"
+    />
   </div>
 </template>
 
@@ -16,25 +16,33 @@
 import axios from 'axios'
 import { GChart } from 'vue-google-charts'
 import get_player_count from '../modules/GetPlayerCount'
+import Datepicker from 'v-calendar';
 
 
 export default {
   name: 'App',
   components: {
-    GChart
+    GChart,
+    Datepicker
   },
   data () {
     return {
+      picker: new Date().toISOString().substr(0, 10),
       chartsLib: null, 
-      // Array will be automatically processed with visualization.arrayToDataTable function
-      chartData: [
-        ['Year', 'Sales', 'Expenses', 'Profit'],
-        ['2014', 1000, 400, 200],
-        ['2015', 1170, 460, 250],
-        ['2016', 660, 1120, 300],
-        ['2017', 1030, 540, 350]
-      ],
-      players : []
+      players : [],
+      t_date : '20190321',
+      state : {
+        date: new Date(2016, 9,  16)
+      },
+    }
+  },
+  created() {
+    this.get_playerCount(this.t_date)
+  },
+  watch:  {
+    picker: function (picker) {
+      console.log(picker.replace(/-/gi,''))
+      this.t_date = picker.replace(/-/gi,'')
     }
   },
   computed: {

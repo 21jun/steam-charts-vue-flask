@@ -288,6 +288,26 @@ def getGameName(appid):
     #print(response)
     return json.dumps(response, default = json_default)
 
+# appid 넣으면 게임 개발사, 퍼블리셔, 발매일 반환하는 쿼리
+@app.route("/db/info/<appid>")
+def getGameInfo(appid):
+    db = db_conn()
+    cursor = db.cursor()
+    response = {
+        'success': False,
+        'info': '',
+        'error': ''
+    }
+    SQL ='''
+    select developer, publisher, DATE(release_date) from `appinfo` where appid = {appid}
+    '''
+    cursor.execute(SQL.format(appid=appid))
+    response["info"] = cursor.fetchall()
+    response["success"] = True
+    cursor.close()
+    #print(response)
+    return json.dumps(response, default = json_default)
+
 # appid 넣으면 게임 리뷰정보 반환
 @app.route("/db/review/<appid>")
 def getGameReviews(appid):

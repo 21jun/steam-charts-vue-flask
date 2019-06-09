@@ -9,7 +9,8 @@
         <v-btn color="info" @click="get_tagsInfo(t_appid)">게임 Tag 불러오기</v-btn>
 
         <H1>{{name}}</H1>
-
+        <h2>개발사  : {{developer}}</h2>
+        <h2>퍼블리셔: {{publisher}}</h2>
         <GChart
             type="ColumnChart"
             :data="max_player"
@@ -48,6 +49,9 @@ export default {
     return {
         max_player:[1,2,3,4,5,6,7,8,10],
         tags : [],
+        developer:'',
+        publisher:'',
+        release_date:'',
         t_appid : 570,
         name : '',
         chartOptions: {
@@ -66,6 +70,17 @@ export default {
 
   methods: {
 
+    get_gameInfo(appid){
+        const baseURI = 'http://localhost:5000/db/info/';
+
+        axios.get(baseURI+appid).then((response)=>{
+            //console.log(response.data['name'])
+            this.developer = response.data['info'][0][0]
+            this.publisher = response.data['info'][0][1]
+            this.release_date = response.data['info'][0][2]
+        })
+    },
+    
     get_gameName(appid){
         const baseURI = 'http://localhost:5000/db/name/';
 
@@ -74,10 +89,11 @@ export default {
             this.name = response.data['name'][0][0]
         })
     },
-    
+
     get_maxPlayer(appid){
 
         this.get_gameName(appid);
+        this.get_gameInfo(appid);
 
         const baseURI = 'http://localhost:5000/db/maxPlayer/';
 

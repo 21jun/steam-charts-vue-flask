@@ -7,6 +7,7 @@ import SingleGameInfo from '@/components/SingleGameInfo'
 import TagLists from '@/components/TagLists'
 import UserRecommand from '@/components/UserRecommand'
 import ReviewPage from '@/components/ReviewPage'
+import TagSearch from '@/components/TagSearch'
 Vue.use(Router)
 
 
@@ -47,5 +48,10 @@ export default new Router({
       name: 'ReviewPage',
       component: ReviewPage 
     },
+    {
+      path: '/TagSearch',
+      name: 'TagSearch',
+      component: TagSearch 
+    }
   ]
 })

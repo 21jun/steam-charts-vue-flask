@@ -227,8 +227,8 @@ def searchTagGame(text):
     return json.dumps(response, default = json_default)
 
 # tag , 최소 동접자수 넣으면 게임 추천
-@app.route("/db/recommand/<tag>/<min>")
-def recommandGame(tag, min):
+@app.route("/db/recommand/<tag>/<tag2>/<tag3>/<min>")
+def recommandGame(tag, tag2, tag3, min):
     db = db_conn()
     cursor = db.cursor()
     response = {
@@ -237,31 +237,43 @@ def recommandGame(tag, min):
         'error': ''
     }
     SQL ='''
-    SELECT 
-        DISTINCT C1.appid, C1.name, C2.max_player
+    SELECT DISTINCT
+        T1.appid, name, max_player
     FROM
         (SELECT 
-            T1.appid, T1.name
+            appid, COUNT(*)
         FROM
-            `applist` T1
-        JOIN (SELECT 
-            appid, tag_name
+            (SELECT 
+            appid, A.tagid, B.tag_name
         FROM
-            `tags` A
-        JOIN taglist B ON A.tagid = B.tagid
+            (SELECT DISTINCT
+            tagid, appid
+        FROM
+            `tags`) A
+        LEFT JOIN (SELECT 
+            *
+        FROM
+            `taglist`
         WHERE
-            tag_name = '{tag}') T2 ON T1.appid = T2.appid) C1
+            tag_name = '{tag}' OR tag_name = '{tag2}'
+                OR tag_name = '{tag3}') B ON A.tagid = B.tagid
+        WHERE
+            B.tagid IS NOT NULL) T
+        GROUP BY appid
+        HAVING COUNT(*) >= 3) T1
+            LEFT JOIN
+        applist T2 ON T1.appid = T2.appid
             LEFT JOIN
         (SELECT 
             appid, MAX(count) AS max_player
         FROM
             `player_count`
-        GROUP BY appid) C2 ON C1.appid = C2.appid
+        GROUP BY appid) C2 ON T1.appid = C2.appid
     WHERE
         C2.max_player > {min}
     ORDER BY C2.max_player DESC
     '''
-    cursor.execute(SQL.format(tag=tag, min = min))
+    cursor.execute(SQL.format(tag=tag, tag2 = tag2, tag3 =tag3, min = min))
     response["list"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
@@ -283,6 +295,25 @@ def getGameName(appid):
     '''
     cursor.execute(SQL.format(appid=appid))
     response["name"] = cursor.fetchall()
+    response["success"] = True
+    cursor.close()
+    #print(response)
+    return json.dumps(response, default = json_default)
+
+@app.route("/db/alltag")
+def getAlltags():
+    db = db_conn()
+    cursor = db.cursor()
+    response = {
+        'success': False,
+        'list': '',
+        'error': ''
+    }
+    SQL ='''
+    select tag_name from taglist
+    '''
+    cursor.execute(SQL)
+    response["list"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
     #print(response)

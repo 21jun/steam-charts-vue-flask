@@ -24,7 +24,6 @@
 import axios from 'axios'
 import InputForm from './InputForm'
 import get_app_list from '../modules/GetApplist'
-import ApplistTable from './ApplistTable'
 export default {
   name: 'App',
   components: {

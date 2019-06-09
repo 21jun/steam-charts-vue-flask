@@ -6,11 +6,21 @@
             label="Tag를 입력해주세요"
         ></v-text-field>
         <v-text-field
+            v-model="tag2"
+            :counter="10"
+            label="Tag를 입력해주세요"
+        ></v-text-field>
+        <v-text-field
+            v-model="tag3"
+            :counter="10"
+            label="Tag를 입력해주세요"
+        ></v-text-field>
+        <v-text-field
             v-model="min"
             :counter="10"
             label="최소 동접자수를 입력해주세요"
         ></v-text-field>
-        <v-btn color="info" @click="get_recommandGame(tag,min)">추천 게임 불러오기</v-btn>
+        <v-btn color="info" @click="get_recommandGame(tag, tag2, tag3,min)">추천 게임 불러오기</v-btn>
         
         <table id="firstTable">
             <thead>
@@ -44,6 +54,8 @@ export default {
   data () {
     return {
         tag: 'Action',
+        tag2: 'RTS',
+        tag3: 'FPS',
         min: 0,
         recommand_games:[],
     }
@@ -55,9 +67,11 @@ export default {
   },
 
   methods: {
-    get_recommandGame(tag, min){
+    get_recommandGame(tag, tag2, tag3, min){
         const baseURI = 'http://localhost:5000/db/recommand/';
-        axios.get(baseURI + tag + '/' + min).then((response)=>{
+        console.log(baseURI + tag + '/' + tag2 + '/' + tag3 +'/' + min)
+        axios.get(baseURI + tag + '/' + tag2 + '/' + tag3 +'/' + min).then((response)=>{
+
             this.recommand_games = []
             console.log(response)
             //console.log(baseURI + tag + '/' + min)

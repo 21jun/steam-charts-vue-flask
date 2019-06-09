@@ -50,13 +50,6 @@ export default {
         tags : [],
         t_appid : 570,
         name : '',
-        chartData: [
-            ['Year', 'Sales', 'Expenses', 'Profit'],
-            ['2014', 1000, 400, 200],
-            ['2015', 1170, 460, 250],
-            ['2016', 660, 1120, 300],
-            ['2017', 1030, 540, 350]
-        ],
         chartOptions: {
             chart: {
             title: 'Company Performance',
@@ -77,7 +70,7 @@ export default {
         const baseURI = 'http://localhost:5000/db/name/';
 
         axios.get(baseURI+appid).then((response)=>{
-            console.log(response.data['name'])
+            //console.log(response.data['name'])
             this.name = response.data['name'][0][0]
         })
     },
@@ -90,10 +83,11 @@ export default {
 
         axios.get(baseURI+appid).then((response)=>{
 
-            console.log(get_max_player(response.data['player_count']))
+            //console.log(get_max_player(response.data['player_count']))
 
             this.max_player = get_max_player(response.data['player_count'])
         })
+        console.log(this.max_player)
     },
 
     get_tagsInfo(appid){
@@ -101,7 +95,7 @@ export default {
 
         axios.get(baseURI+appid).then((response)=>{
 
-            console.log(get_tags(response.data['tags']))
+            //console.log(get_tags(response.data['tags']))
 
             this.tags = get_tags(response.data['tags'])
         })

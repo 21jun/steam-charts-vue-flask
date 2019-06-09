@@ -47,7 +47,26 @@
           </v-list-tile-content>
         </v-list-tile>
         </router-link>
-
+        <router-link to="/UserRecommand">
+        <v-list-tile @click="">
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>UserRecommand</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        </router-link>
+        <router-link to="/ReviewPage">
+        <v-list-tile @click="">
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>ReviewPage</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        </router-link>
       </v-list>
     </v-navigation-drawer>
   <v-toolbar app></v-toolbar>

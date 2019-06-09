@@ -5,6 +5,8 @@ import TopGameChart from '@/components/TopGameChart'
 import DetailPage from '@/components/DetailPage'
 import SingleGameInfo from '@/components/SingleGameInfo'
 import TagLists from '@/components/TagLists'
+import UserRecommand from '@/components/UserRecommand'
+import ReviewPage from '@/components/ReviewPage'
 Vue.use(Router)
 
 
@@ -34,6 +36,16 @@ export default new Router({
       path: '/TagLists',
       name: 'TagLists',
       component: TagLists 
+    },
+    {
+      path: '/UserRecommand',
+      name: 'UserRecommand',
+      component: UserRecommand 
+    },
+    {
+      path: '/ReviewPage',
+      name: 'ReviewPage',
+      component: ReviewPage 
     },
   ]
 })

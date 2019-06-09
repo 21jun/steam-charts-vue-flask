@@ -15,7 +15,7 @@ cors = CORS(app, resources={
 def db_conn():
     db = pymysql.connect(
         host="localhost",
-        port=3307,
+        port=3306,
         db="flasksteam",
         user="root", 
         password="1qazxc"
@@ -24,7 +24,7 @@ def db_conn():
 
 db = pymysql.connect(
     host="localhost",
-    port=3307,
+    port=3306,
     db="flasksteam",
     user="root", 
     password="1qazxc"
@@ -226,6 +226,48 @@ def searchTagGame(text):
     #print(response)
     return json.dumps(response, default = json_default)
 
+# tag , 최소 동접자수 넣으면 게임 추천
+@app.route("/db/recommand/<tag>/<min>")
+def recommandGame(tag, min):
+    db = db_conn()
+    cursor = db.cursor()
+    response = {
+        'success': False,
+        'list': [],
+        'error': ''
+    }
+    SQL ='''
+    SELECT 
+        DISTINCT C1.appid, C1.name, C2.max_player
+    FROM
+        (SELECT 
+            T1.appid, T1.name
+        FROM
+            `applist` T1
+        JOIN (SELECT 
+            appid, tag_name
+        FROM
+            `tags` A
+        JOIN taglist B ON A.tagid = B.tagid
+        WHERE
+            tag_name = '{tag}') T2 ON T1.appid = T2.appid) C1
+            LEFT JOIN
+        (SELECT 
+            appid, MAX(count) AS max_player
+        FROM
+            `player_count`
+        GROUP BY appid) C2 ON C1.appid = C2.appid
+    WHERE
+        C2.max_player > {min}
+    ORDER BY C2.max_player DESC
+    '''
+    cursor.execute(SQL.format(tag=tag, min = min))
+    response["list"] = cursor.fetchall()
+    response["success"] = True
+    cursor.close()
+    # print(response)
+    return json.dumps(response, default = json_default)
+
 # appid 넣으면 게임 이름 반환하는 쿼리
 @app.route("/db/name/<appid>")
 def getGameName(appid):
@@ -241,6 +283,41 @@ def getGameName(appid):
     '''
     cursor.execute(SQL.format(appid=appid))
     response["name"] = cursor.fetchall()
+    response["success"] = True
+    cursor.close()
+    #print(response)
+    return json.dumps(response, default = json_default)
+
+# appid 넣으면 게임 리뷰정보 반환
+@app.route("/db/review/<appid>")
+def getGameReviews(appid):
+    db = db_conn()
+    cursor = db.cursor()
+    response = {
+        'success': False,
+        'list': [],
+        'error': ''
+    }
+    SQL ='''
+    SELECT 
+        B.name, A.*
+    FROM
+        (SELECT 
+            appid,
+                MAX(recent_review_count),
+                MAX(recent_review_possitive),
+                MAX(all_review_count),
+                MAX(all_review_possitive),
+                DATE(date)
+        FROM
+            `app_review`
+        GROUP BY appid , DATE(date)) A
+            LEFT JOIN
+        `applist` B ON A.appid = B.appid
+    where A.appid = {appid}
+    '''
+    cursor.execute(SQL.format(appid=appid))
+    response["list"] = cursor.fetchall()
     response["success"] = True
     cursor.close()
     #print(response)

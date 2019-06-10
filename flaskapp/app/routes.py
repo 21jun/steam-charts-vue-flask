@@ -70,6 +70,7 @@ def json_default(value):
         return value.strftime('%Y-%m-%d') 
     raise TypeError('not JSON serializable')
 
+# 날짜 정보를 입력하면 그날의 최고 동접자수를 기록한 게임 20개 반환
 @app.route("/db/playerCount/<date>")
 def getPlayerCount(date):
     db = db_conn()
